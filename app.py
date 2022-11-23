@@ -45,7 +45,7 @@ def enrich():
     elif request.method == 'POST':
         raw_data = request.get_data()
         data = json.loads(raw_data)
-        if isinstance(data, dict) and "auth" in data.keys() and "cfg" in data.keys():
+        if isinstance(data, dict) and "cfg" in data.keys():
             return make_response(jsonify(betweenness(data["cfg"])), 200)
 
 
