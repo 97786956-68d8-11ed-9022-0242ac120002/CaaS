@@ -1,0 +1,6 @@
+.idea
+__pycache__/
+Graph-Betweenness-Centrality/
+BC.parallel.gpu.elf
+BC.parallel.cpu.elf
+start.sh
