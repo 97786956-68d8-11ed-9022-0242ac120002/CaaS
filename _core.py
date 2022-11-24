@@ -87,12 +87,13 @@ def betweenness(cfg: dict):
         raise AssertionError(f"[check] output {output_path} malformed ")
 
     max_bc = bc[0]
+    bc = [float(bc_item) for bc_item in bc]
     sum_bc = sum(bc)
     addition = 1e-13
     bc = bc[1:]
     centralities = {}
     for i in range(len(nodes)):
-        centralities[nodes[i]] = float(bc[i]) / float(sum_bc + addition)
+        centralities[nodes[i]] = bc[i] / float(sum_bc + addition)
 
     return centralities
 
