@@ -59,7 +59,7 @@ def convertDictToGBCIN(cfg: dict, path: str):
     return nodes, lines
 
 
-def betweenness(cfg: dict):
+def betweenness(cfg: dict, debug):
 
     token = getToken(cfg)
     output_path = f"{getTmpDir()}{token}.out"
@@ -94,6 +94,12 @@ def betweenness(cfg: dict):
     centralities = {}
     for i in range(len(nodes)):
         centralities[nodes[i]] = bc[i] / float(sum_bc + addition)
+
+    if isinstance(debug, str) and debug == "DEADBEEF":
+        print("debugging")
+    else:
+        os.remove(input_path)
+        os.remove(output_path)
 
     return centralities
 
