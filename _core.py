@@ -9,6 +9,7 @@ from hashlib import sha256
 GPU_PROG = "./BC.parallel.gpu.elf"
 CPU_PROG = "./BC.parallel.cpu.elf"
 
+
 def getTmpDir():
     for _tmp_dir in ["TMPDIR", "TMP", "TEMP"]:
         if _tmp_dir in os.environ.keys():
@@ -35,7 +36,7 @@ def turnCFG2Matrix(cfg: dict):
 
 def getToken(cfg: dict):
     matrix = turnCFG2Matrix(cfg).tolist()
-    return sha256(str(matrix).encode()).hexdigest()[:8]
+    return sha256(str(matrix).encode()).hexdigest()[:16]
 
 
 def convertDictToGBCIN(cfg: dict, path: str):
@@ -59,11 +60,41 @@ def convertDictToGBCIN(cfg: dict, path: str):
     return nodes, lines
 
 
+def getNodes(cfg: dict):
+    nodes = list(cfg.keys())
+    lines = []
+    for k in cfg.keys():
+        for e in cfg[k]:
+            lines.append((k, e))
+            if e not in nodes:
+                nodes.append(e)
+    return nodes
+
+
+def generateResult(output_path, nodes):
+    with open(output_path, "r") as fgbcout:
+        fgbcout_content = fgbcout.read()
+    bc = fgbcout_content.replace('\n', '').split(' ')[:-1]
+    bc = [float(bc_item) for bc_item in bc]
+    sum_bc = sum(bc)
+    addition = 1e-13
+    bc = bc[1:]
+    centralities = {}
+    for i in range(len(nodes)):
+        centralities[nodes[i]] = bc[i] / float(sum_bc + addition)
+
+    return centralities
+
+
 def betweenness(cfg: dict, debug):
 
     token = getToken(cfg)
     output_path = f"{getTmpDir()}CaaS-{token}.out"
     input_path = f"{getTmpDir()}CaaS-{token}.in"
+
+    if os.path.exists(output_path):
+        nodes = getNodes(cfg)
+        return generateResult(output_path, nodes)
 
     nodes, lines = convertDictToGBCIN(cfg, input_path)
 
