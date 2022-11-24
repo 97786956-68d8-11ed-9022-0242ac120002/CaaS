@@ -98,11 +98,12 @@ def betweenness(cfg: dict, debug):
     if isinstance(debug, str) and debug == "DEADBEEF":
         print("debugging")
     else:
-        try:
+        if os.path.exists(input_path):
             os.remove(input_path)
+        if os.path.exists(output_path):
             os.remove(output_path)
-        except Exception as e:
-            print(f"{e} with \n\tinput {input_path}\n\toutput {output_path}")
+        # except Exception as e:
+        #     print(f"{e} with \n\tinput {input_path}\n\toutput {output_path}")
 
     return centralities
 
