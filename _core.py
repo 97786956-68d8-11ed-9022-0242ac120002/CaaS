@@ -65,6 +65,11 @@ def betweenness(cfg: dict, debug):
     output_path = f"{getTmpDir()}{token}.out"
     input_path = f"{getTmpDir()}{token}.in"
 
+    if os.path.exists(input_path):
+        os.remove(input_path)
+    if os.path.exists(output_path):
+        os.remove(output_path)
+
     nodes, lines = convertDictToGBCIN(cfg, input_path)
 
     if torch.cuda.is_available():
